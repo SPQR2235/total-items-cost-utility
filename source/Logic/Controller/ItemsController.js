@@ -109,11 +109,7 @@ export default class ItemsController {
         const totalCost = calculateWithCommission(totalCostWithoutCommission, this.commission)
 
 
-        this.viewState.DOM.totalCost.textContent = `Total Cost: ${totalCost > 0 ? totalCost.toFixed(2) : 0}`
-        this.viewState.DOM.totalCostWithoutCommission.textContent = `Without Commission: ${totalCostWithoutCommission > 0 ? totalCostWithoutCommission.toFixed(2) : 0}`
-
-        console.log(`Total Cost: ${totalCost.toFixed(2)}`)
-        console.log(`Without Commission: ${totalCostWithoutCommission.toFixed(2)}`)
-        console.log(`Commission: ${this.commission.toFixed(2)}%`)
+        this.viewState.DOM.totalCost.textContent = `Total Cost: ${totalCost > 0 ? totalCost.toFixed(2) : `0.00`}`
+        this.viewState.DOM.totalCostWithoutCommission.textContent = `Without Commission: ${totalCostWithoutCommission > 0 ? totalCostWithoutCommission.toFixed(2) : `0.00`}`
     }
 }
