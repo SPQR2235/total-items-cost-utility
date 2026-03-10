@@ -27,8 +27,8 @@ export default class ViewState {
 
         this.content = Object.freeze({
             itemName: "Item name",
-            count: "count",
-            price: "price"
+            count: "Count",
+            price: "Price"
         })
 
         this.inputTypes = Object.freeze({
