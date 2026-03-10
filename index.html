@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Total Items Cost Utility</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./source/style/style.css">
+</head>
+
+<body>
+    <header>
+        <div id="logo">
+            <div>
+                Total Items Cost Utility<div id="under-logo">by SPQR_rsnt</div>
+            </div>
+        </div>
+        <div id="result-wrap">
+            <div id="total-cost">Total Cost: 0.00</div>
+            <div id="total-cost-without-commission">Without Commission: 0.00</div>
+        </div>
+    </header>
+    <div id="commission-background">
+        <div id="commission-wrap">
+            <div id="comission-block">Commission</div>
+            <input type="number" id="commission-input" class="commission-input" placeholder="Commission: 0.00%" value="20">  
+        </div>
+    </div>
+    <div id="item-wrap"></div>
+    <footer>
+        <div id="button-wrap">
+            <div class="button-section">
+                <button id="add-item-button" class="button">Add New Item</button>
+            </div>
+            <div class="button-section">
+                <button id="delete-item-button" class="button">Delete Last Item</button>
+            </div>
+            <div class="button-section">
+                <button id="reset-button" class="button">Reset All</button>
+            </div>
+        </div>
+    </footer>
+    <script type="module" src="./source/Logic/ViewModel.js"></script>
+</body>
+
+</html>

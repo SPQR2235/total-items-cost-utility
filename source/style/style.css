@@ -1,0 +1,212 @@
+:root {
+    --textColor: rgb(216, 216, 216);
+    --fontSize: 1em;
+
+    --headerHeight: 15dvh;
+    --headerTemplateColumns: 100%;
+    --headerBackground: rgb(34, 34, 34);
+    --logoDisplay: none;
+
+    --itemWidth: 90dvw;
+
+    --background: rgb(85, 85, 85);
+
+    --buttonBackground: rgb(57, 57, 57);
+    --buttonBorder: 3px solid rgb(75, 75, 75);
+    --buttonShadow: rgb(75, 75, 75);
+    --buttonHeight: 35px;
+    --buttonWidth: 100px;
+    --buttonFontSize: 0.7em;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    overflow: hidden;
+    user-select: none;
+}
+
+body {
+    background: var(--background);
+    color: var(--textColor);
+    font-family: Verdana, Tahoma, Geneva, sans-serif;
+    font-size: var(--fontSize);
+}
+
+#result-wrap,
+#item-wrap,
+.item,
+#button-wrap,
+footer,
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header {
+    position: absolute;
+    width: 100vw;
+    height: var(--headerHeight);
+    background: var(--headerBackground);
+    display: grid;
+    align-items: center;
+    grid-template-columns: var(--headerTemplateColumns);
+}
+
+input {
+    width: 100%;
+    height: 35px;
+    background: rgb(57, 57, 57);
+    border: none;
+    font-size: 1em;
+    padding: 0 10px;
+    color: var(--textColor);
+}
+
+input:focus-within {
+    outline: none;
+    border: 20px solid var(--buttonBorder);
+    background: rgb(75, 75, 75);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"]{
+    appearance: textfield;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100dvw;
+    height: var(--headerHeight);
+    background: var(--headerBackground);
+}
+
+#logo {
+    white-space: nowrap;
+    margin-left: 50px;
+    height: auto;
+    display: var(--logoDisplay);
+    white-space: nowrap;
+    justify-self: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#under-logo {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    font-size: 0.9em;
+    color: #4f4f4f;
+}
+
+#result-wrap {
+    flex-direction: column;
+    gap: 10px;
+}
+
+#item-wrap {
+    position: absolute;
+    overflow-y: auto;
+    flex-direction: column;
+    justify-content: start;
+    position: fixed;
+    top: calc((var(--headerHeight) * 2) + 20px);
+    height: calc(100dvh - (var(--headerHeight) * 3) - 30px);
+    gap: 25px;
+    width: 100dvw;
+    transition: background 0.5s ease;
+}
+
+#commission-background,
+.item {
+    width: var(--itemWidth);
+    background: rgb(45, 45, 45);
+}
+
+#commission-background {
+    position: absolute;
+    top: calc(var(--headerHeight) + 10px);
+    left: 50%;
+    transform: translate(-50%);
+    height: var(--headerHeight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#commission-wrap,
+.inner-wrap {
+    margin: 25px 0px 25px 0px;
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#button-wrap {
+    gap: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.button {
+    border-radius: 15px;
+    min-width: var(--buttonWidth);
+    width: auto;
+    color: var(--textColor);
+    height: var(--buttonHeight);
+    background: var(--buttonBackground);
+    border: var(--buttonBorder);
+    font-size: var(--buttonFontSize);
+    transition: transform 0.25s ease, box-shadow 0.3s ease, background 0.4s ease, border 0.3s ease;
+}
+
+.button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 25px 2px var(--buttonShadow);
+}
+
+@media(min-width: 1280px) {
+    :root {
+        --headerHeight: 9vh;
+        --headerTemplateColumns: 33.3% 33.3% 33.3%;
+        --logoDisplay: flex;
+        --buttonWidth: 150px;
+        --buttonHeight: 40px;
+        --itemWidth: 60dvw;
+    }
+}
+
+@media (min-width: 1600px) {
+    :root {
+        --buttonWidth: 175px;
+        --buttonHeight: 50px;
+        --headerHeight: 7.5dvh;
+    }
+}
+
+@media(min-width: 2000px) {
+    :root {
+        --fontSize: 1.1em;
+        --buttonWidth: 225px;
+        --buttonHeight: 60px;
+        --buttonFontSize: 1.1em;
+    }
+}
