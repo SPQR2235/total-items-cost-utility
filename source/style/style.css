@@ -1,13 +1,17 @@
 :root {
     --textColor: rgb(216, 216, 216);
     --fontSize: 1em;
+    --gap: 10px;
 
-    --headerHeight: 15dvh;
+    --headerHeight: 12.5dvh;
     --headerTemplateColumns: 100%;
     --headerBackground: rgb(34, 34, 34);
     --logoDisplay: none;
 
+    --inputHeight: 35px;
+
     --itemWidth: 90dvw;
+    --itemBackground: rgb(45, 45, 45);
 
     --background: rgb(85, 85, 85);
 
@@ -61,7 +65,7 @@ header {
 
 input {
     width: 100%;
-    height: 35px;
+    height: var(--inputHeight);
     background: rgb(57, 57, 57);
     border: none;
     font-size: 1em;
@@ -69,9 +73,8 @@ input {
     color: var(--textColor);
 }
 
-input:focus-within {
+input:focus {
     outline: none;
-    border: 20px solid var(--buttonBorder);
     background: rgb(75, 75, 75);
 }
 
@@ -81,7 +84,7 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 0;
 }
 
-input[type="number"]{
+input[type="number"] {
     appearance: textfield;
 }
 
@@ -98,7 +101,6 @@ footer {
     margin-left: 50px;
     height: auto;
     display: var(--logoDisplay);
-    white-space: nowrap;
     justify-self: flex-start;
     flex-direction: column;
     justify-content: center;
@@ -118,49 +120,71 @@ footer {
     gap: 10px;
 }
 
+#commission-wrap {
+    position: absolute;
+    top: calc(var(--headerHeight) + var(--gap));
+    left: 50%;
+    transform: translate(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--gap);
+    padding-bottom: var(--gap);
+}
+
+#commission-input {
+    width: 90%;
+}
+
 #item-wrap {
     position: absolute;
     overflow-y: auto;
     flex-direction: column;
     justify-content: start;
-    position: fixed;
-    top: calc((var(--headerHeight) * 2) + 20px);
-    height: calc(100dvh - (var(--headerHeight) * 3) - 30px);
-    gap: 25px;
+    top: calc(var(--headerHeight) + var(--inputHeight) + (var(--gap) * 4));
+    height: calc(100dvh - (var(--headerHeight) * 2) - var(--inputHeight) - (var(--gap) * 5));
+    gap: var(--gap);
     width: 100dvw;
     transition: background 0.5s ease;
 }
 
-#commission-background,
+#commission-wrap,
 .item {
     width: var(--itemWidth);
-    background: rgb(45, 45, 45);
+    background: var(--itemBackground);
 }
 
-#commission-background {
-    position: absolute;
-    top: calc(var(--headerHeight) + 10px);
-    left: 50%;
-    transform: translate(-50%);
-    height: var(--headerHeight);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#commission-wrap,
 .inner-wrap {
-    margin: 25px 0px 25px 0px;
     width: 90%;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    padding-bottom: var(--gap);
+}
+
+.name-label {
+    background: #fff;
+}
+
+.name-label,
+.item-tag {
+    width: 100%;
+    text-align: center;
+}
+
+.item-tag {
+    position: sticky;
+    top: 0;
+    background: var(--itemBackground);
+    border-bottom: var(--buttonBorder);
+    padding-top: var(--gap);
+    padding-bottom: var(--gap);
 }
 
 #button-wrap {
-    gap: 25px;
+    width: var(--itemWidth);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -174,7 +198,7 @@ footer {
     height: var(--buttonHeight);
     background: var(--buttonBackground);
     border: var(--buttonBorder);
-    font-size: var(--buttonFontSize);
+    font-size: var(--buttonFontSize) !important;
     transition: transform 0.25s ease, box-shadow 0.3s ease, background 0.4s ease, border 0.3s ease;
 }
 
@@ -186,8 +210,9 @@ footer {
 @media(min-width: 1280px) {
     :root {
         --headerHeight: 9vh;
-        --headerTemplateColumns: 33.3% 33.3% 33.3%;
+        --headerTemplateColumns: 1fr 1fr 1fr;
         --logoDisplay: flex;
+
         --buttonWidth: 150px;
         --buttonHeight: 40px;
         --itemWidth: 60dvw;
@@ -196,15 +221,20 @@ footer {
 
 @media (min-width: 1600px) {
     :root {
+        --gap: 15px;
+        
+        --headerHeight: 7.5dvh;
+        
         --buttonWidth: 175px;
         --buttonHeight: 50px;
-        --headerHeight: 7.5dvh;
     }
 }
 
 @media(min-width: 2000px) {
     :root {
-        --fontSize: 1.1em;
+        --fontSize: 1.3em;
+        --gap: 25px;
+        
         --buttonWidth: 225px;
         --buttonHeight: 60px;
         --buttonFontSize: 1.1em;

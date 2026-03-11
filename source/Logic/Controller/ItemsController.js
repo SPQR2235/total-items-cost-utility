@@ -79,7 +79,9 @@ export default class ItemsController {
                 content: this.viewState.content,
                 inputTypes: this.viewState.inputTypes
             },
-            this.defaultCount)
+            this.defaultCount,
+            this.items.length + 1
+        )
         const item = { model, view }
 
         this.items.push(item)
@@ -107,7 +109,6 @@ export default class ItemsController {
         }
 
         const totalCost = calculateWithCommission(totalCostWithoutCommission, this.commission)
-
 
         this.viewState.DOM.totalCost.textContent = `Total Cost: ${totalCost > 0 ? totalCost.toFixed(2) : `0.00`}`
         this.viewState.DOM.totalCostWithoutCommission.textContent = `Without Commission: ${totalCostWithoutCommission > 0 ? totalCostWithoutCommission.toFixed(2) : `0.00`}`

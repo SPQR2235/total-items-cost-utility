@@ -17,7 +17,9 @@ export default class ViewState {
         this.classes = Object.freeze({
             item: "item",
             innerWrap: "inner-wrap",
-            block: "block",
+            itemTag: "item-tag",
+            label: "label",
+            nameLabel: "name-labgel",
             input: "input",
             name: "name-input",
             count: "count-input",
@@ -26,7 +28,7 @@ export default class ViewState {
         })
 
         this.content = Object.freeze({
-            itemName: "Item name",
+            itemName: "Name",
             count: "Count",
             price: "Price"
         })

@@ -4,7 +4,7 @@ export default class Item {
         this.price = 0
     }
 
-    calculateTotal(commission) {
-        return (this.count * this.price) * (1 - (parseFloat(commission) / 100 || 0))
+    calculateTotal() {
+        return this.count * this.price
     }
 }
