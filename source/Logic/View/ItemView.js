@@ -34,9 +34,6 @@ export default class ItemView {
         this.innerLayers.nameLabel.textContent = viewState.content.itemName
         this.innerLayers.countLabel.textContent = viewState.content.count
         this.innerLayers.priceLabel.textContent = viewState.content.price
-
-        this.innerLayers.countInput.type = viewState.inputTypes.number
-        this.innerLayers.priceInput.type = viewState.inputTypes.number
         
         this.innerLayers.innerWrap.appendChild(this.innerLayers.itemTag)
         this.innerLayers.innerWrap.appendChild(this.innerLayers.nameLabel)
@@ -48,7 +45,6 @@ export default class ItemView {
 
         this.element.appendChild(this.innerLayers.innerWrap)
         container.appendChild(this.element)
-
     }
 
     remove() {

@@ -27,7 +27,7 @@ export default class ItemsController {
                 return
             }
 
-            if (!/^\d+$/.test(newValue)) {
+            if (!/^\d*\.?\d*$/.test(newValue)) {
                 event.target.value = event.target.dataset.lastValue || ""
                 return
             }

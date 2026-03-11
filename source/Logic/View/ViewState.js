@@ -32,10 +32,5 @@ export default class ViewState {
             count: "Count",
             price: "Price"
         })
-
-        this.inputTypes = Object.freeze({
-            number: "number",
-            text: "text"
-        })
     }
 }
