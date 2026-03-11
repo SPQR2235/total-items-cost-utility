@@ -8,7 +8,7 @@ export default class ItemsController {
         this.viewState = viewState
         this.items = []
         this.defaultCount = 1
-        this.commission = 20
+        this.commission = viewState.DOM.commissionInput.value
         this.eventListener = (event) => {
             if (event.target.tagName !== "INPUT") return
 
@@ -24,7 +24,6 @@ export default class ItemsController {
 
             if (newValue === "") {
                 event.target.dataset.lastValue = ""
-                return
             }
 
             if (!/^\d*\.?\d*$/.test(newValue)) {
