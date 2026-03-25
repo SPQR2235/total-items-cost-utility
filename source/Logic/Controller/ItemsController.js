@@ -52,6 +52,7 @@ export default class ItemsController {
                         ...item.model
                     })
                 }
+                this.render(false)
                 this.loading = false
             },
             loadFile: async () => {
@@ -72,6 +73,7 @@ export default class ItemsController {
                 } catch (e) {
                     console.error("Ошибка загрузки файла:", e)
                 }
+                this.render(false)
                 this.loading = false
             }
         }
