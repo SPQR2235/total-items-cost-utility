@@ -30,9 +30,10 @@ export default class DataManager {
             const data = JSON.parse(raw)
             const itemsMap = new Map()
 
-            for (const itemData of data.items) {
-                itemsMap.set(itemData.id, {
-                    ID: itemData.id,
+            data.items.forEach((itemData, index) => {
+                const id = itemData.id ?? index + 1
+                itemsMap.set(id, {
+                    ID: id,
                     model: {
                         name: itemData.name,
                         count: Number(itemData.count),
@@ -40,13 +41,11 @@ export default class DataManager {
                     },
                     view: null
                 })
-            }
+            })
 
             const count = itemsMap.size
-
             this.commission = data.commission || 0
-            console.log(itemsMap, count)
-            return { map: itemsMap, count: count }
+            return { map: itemsMap, count }
         } catch (e) {
             console.error("Ошибка загрузки:", e)
             return { map: new Map(), count: 0 }

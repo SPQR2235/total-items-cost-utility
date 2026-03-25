@@ -29,29 +29,27 @@ export default class ItemsController {
 
                 if (inputClass === name) {
                     this.handleNameInput(target)
-                } else if ([count, price].includes(inputClass)) {
+                } else {
                     this.handleNumberInput(target, inputClass)
-                } else if (inputClass === commission) {
-                    const newValue = target.value
-                    target.dataset.lastValue = newValue
-                    this.dataManager.commission = Number(newValue)
-                    this.render(true)
                 }
             },
             load: async () => {
                 this.loading = true
                 this.reset({ add: false })
                 this.items = await this.dataManager.load()
+                let count = 1
                 for (const item of this.items.map.values()) {
                     item.view = new ItemView({
                         container: this.container,
                         viewState: this.itemViewState,
                         defaultCount: this.dataManager.defaultCount,
-                        itemsCount: this.items.count,
+                        itemsCount: count,
                         load: true,
                         ...item.model
                     })
+                    count++
                 }
+                this.viewState.DOM.commissionInput.value = this.dataManager.commission
                 this.render(false)
                 this.loading = false
             },
@@ -60,19 +58,22 @@ export default class ItemsController {
                 try {
                     this.reset({ add: false })
                     this.items = await this.dataManager.loadFile()
+                    let count = 1
                     for (const item of this.items.map.values()) {
                         item.view = new ItemView({
                             container: this.container,
                             viewState: this.itemViewState,
                             defaultCount: this.dataManager.defaultCount,
-                            itemsCount: this.items.count,
+                            itemsCount: count,
                             load: true,
                             ...item.model
                         })
+                        count++
                     }
                 } catch (e) {
                     console.error("Ошибка загрузки файла:", e)
                 }
+                this.viewState.DOM.commissionInput.value = this.dataManager.commission
                 this.render(false)
                 this.loading = false
             }
@@ -126,15 +127,8 @@ export default class ItemsController {
     render(commissionChanged) {
         this.dataManager.calcAll(this.items, commissionChanged)
 
-        this.viewState.DOM.totalCost.textContent = `Total Cost: ${this.dataManager.totalCost
-            > 0 ? this.dataManager.totalCost.toFixed(2)
-            : `0.00`
-            }`
-
-        this.viewState.DOM.totalCostWithCommission.textContent = `With Commission: ${this.dataManager.totalCostWithCommission
-            > 0 ? this.dataManager.totalCostWithCommission.toFixed(2)
-            : `0.00`
-            }`
+        this.viewState.DOM.totalCost.textContent = `Total Cost: ${this.dataManager.totalCost.toFixed(2)}`
+        this.viewState.DOM.totalCostWithCommission.textContent = `With Commission: ${this.dataManager.totalCostWithCommission.toFixed(2)}`
     }
 
     handleNameInput(target) {
@@ -149,33 +143,37 @@ export default class ItemsController {
     }
 
     handleNumberInput(target, inputClass) {
-        const newValue = target.value
-
-        if (newValue === "") {
-            target.dataset.lastValue = ""
-            return
+        let newValue = target.value
+        
+        if (!newValue || newValue.trim() === "") {
+            newValue = "0"
         }
-
         if (!/^\d*\.?\d*$/.test(newValue)) {
-            target.value = target.dataset.lastValue || ""
+            target.value = target.dataset.lastValue || "0"
             return
         }
 
         target.dataset.lastValue = newValue
 
-        const itemElement = target.closest('[data-id]')
-        if (!itemElement) return
-        const id = Number(itemElement.dataset.id)
-        const item = this.items.map.get(id)
-        if (!item) return
+        const numericValue = Number(newValue)
 
-        if (inputClass === this.viewState.classes.count) {
-            item.model.count = Number(newValue)
-        } else if (inputClass === this.viewState.classes.price) {
-            item.model.price = Number(newValue)
+        if (inputClass === this.viewState.classes.commission) {
+            this.dataManager.commission = numericValue
+        } else {
+            const itemElement = target.closest('[data-id]')
+            if (!itemElement) return
+            const id = Number(itemElement.dataset.id)
+            const item = this.items.map.get(id)
+            if (!item) return
+
+            if (inputClass === this.viewState.classes.count) {
+                item.model.count = Number(newValue)
+            } else if (inputClass === this.viewState.classes.price) {
+                item.model.price = Number(newValue)
+            }
         }
 
-        this.render(false)
+        this.render(inputClass === this.viewState.classes.commission)
     }
 }
 
