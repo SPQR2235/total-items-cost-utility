@@ -108,7 +108,6 @@ export default class DataManager {
     download(items) {
         const dataToSave = {
             commission: Number(this.commission),
-            defaultCount: Number(this.defaultCount),
             items: Array.from(items.map.values()).map(item => ({
                 name: item.model.name,
                 count: Number(item.model.count),
