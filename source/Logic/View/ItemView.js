@@ -1,7 +1,8 @@
 export default class ItemView {
-    constructor(container, viewState, defaultCount, itemsCount) {
+    constructor({ container, viewState, defaultCount, itemsCount, load, name, count, price }) {
         this.element = document.createElement(viewState.tags.div)
         this.element.className = viewState.classes.item
+        this.element.dataset.id = itemsCount
 
         this.innerLayers = Object.freeze({
             innerWrap: document.createElement(viewState.tags.div),
@@ -42,6 +43,12 @@ export default class ItemView {
         this.innerLayers.innerWrap.appendChild(this.innerLayers.countInput)
         this.innerLayers.innerWrap.appendChild(this.innerLayers.priceLabel)
         this.innerLayers.innerWrap.appendChild(this.innerLayers.priceInput)
+
+        if (load) {
+            this.innerLayers.nameInput.value = name
+            this.innerLayers.countInput.value = count
+            this.innerLayers.priceInput.value = price
+        }
 
         this.element.appendChild(this.innerLayers.innerWrap)
         container.appendChild(this.element)

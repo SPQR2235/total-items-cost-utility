@@ -1,65 +1,91 @@
 import Item from "../Model/Item.js"
 import ItemView from "../View/ItemView.js"
-import { calculateWithCommission } from "../Lib/math.js"
+import DataManager from "../Model/DataManager.js"
 
 export default class ItemsController {
     constructor(container, viewState) {
         this.container = container
         this.viewState = viewState
-        this.items = []
-        this.defaultCount = 1
-        this.commission = viewState.DOM.commissionInput.value
-        this.eventListener = (event) => {
-            if (event.target.tagName !== "INPUT") return
+        this.itemViewState = {
+            DOM: this.viewState.DOM,
+            tags: this.viewState.tags,
+            classes: this.viewState.classes,
+            content: this.viewState.content,
+            inputTypes: this.viewState.inputTypes
+        }
+        this.dataManager = new DataManager(this.viewState.DOM.commissionInput.value)
+        this.items = { map: new Map(), count: 0 }
+        this.loading = false
+        this.eventListener = {
+            input: async (event) => {
+                if (this.loading) return
+                const target = event.target
+                if (target.tagName !== "INPUT") return
 
-            const inputClass = event.target.className
+                const { count, price, commission, name } = this.viewState.classes
+                const inputClass = target.className
 
-            if (
-                inputClass !== viewState.classes.count
-                && inputClass !== viewState.classes.price
-                && inputClass !== viewState.classes.commission
-            ) return
+                if (![name, count, price, commission].includes(inputClass)) return
 
-            const newValue = event.target.value
-
-            if (newValue === "") {
-                event.target.dataset.lastValue = ""
-            }
-
-            if (!/^\d*\.?\d*$/.test(newValue)) {
-                event.target.value = event.target.dataset.lastValue || ""
-                return
-            }
-
-            event.target.dataset.lastValue = newValue
-
-            if (inputClass === viewState.classes.commission) {
-                this.commission = Number(event.target.value)
-                this.render()
-                return
-            }
-
-            for (const item of this.items) {
-                if (item.view.element.contains(event.target)) {
-                    switch (inputClass) {
-                        case viewState.classes.count:
-                            item.model.count = Number(newValue)
-                            break
-                        case viewState.classes.price:
-                            item.model.price = Number(newValue)
-                            break
-                    }
-                    this.render()
-                    break
+                if (inputClass === name) {
+                    this.handleNameInput(target)
+                } else if ([count, price].includes(inputClass)) {
+                    this.handleNumberInput(target, inputClass)
+                } else if (inputClass === commission) {
+                    const newValue = target.value
+                    target.dataset.lastValue = newValue
+                    this.dataManager.commission = Number(newValue)
+                    this.render(true)
                 }
+            },
+            load: async () => {
+                this.loading = true
+                this.reset({ add: false })
+                this.items = await this.dataManager.load()
+                for (const item of this.items.map.values()) {
+                    item.view = new ItemView({
+                        container: this.container,
+                        viewState: this.itemViewState,
+                        defaultCount: this.dataManager.defaultCount,
+                        itemsCount: this.items.count,
+                        load: true,
+                        ...item.model
+                    })
+                }
+                this.loading = false
+            },
+            loadFile: async () => {
+                this.loading = true
+                try {
+                    this.reset({ add: false })
+                    this.items = await this.dataManager.loadFile()
+                    for (const item of this.items.map.values()) {
+                        item.view = new ItemView({
+                            container: this.container,
+                            viewState: this.itemViewState,
+                            defaultCount: this.dataManager.defaultCount,
+                            itemsCount: this.items.count,
+                            load: true,
+                            ...item.model
+                        })
+                    }
+                } catch (e) {
+                    console.error("Ошибка загрузки файла:", e)
+                }
+                this.loading = false
             }
         }
 
-        window.addEventListener("input", this.eventListener)
+        window.addEventListener("input", this.eventListener.input.bind(this))
 
         viewState.DOM.addButton.addEventListener("click", () => this.add())
         viewState.DOM.deleteButton.addEventListener("click", () => this.delete())
         viewState.DOM.resetButton.addEventListener("click", () => this.reset())
+
+        viewState.DOM.loadButton.addEventListener("click", () => this.eventListener.load())
+        viewState.DOM.loadFileButton.addEventListener("click", () => this.eventListener.loadFile())
+        viewState.DOM.saveButton.addEventListener("click", () => this.dataManager.save(this.items))
+        viewState.DOM.downloadButton.addEventListener("click", () => this.dataManager.download(this.items))
         this.init()
     }
 
@@ -68,48 +94,86 @@ export default class ItemsController {
     }
 
     add() {
-        const model = new Item(this.defaultCount)
-        const view = new ItemView(
-            this.container,
-            {
-                DOM: this.viewState.DOM,
-                tags: this.viewState.tags,
-                classes: this.viewState.classes,
-                content: this.viewState.content,
-                inputTypes: this.viewState.inputTypes
-            },
-            this.defaultCount,
-            this.items.length + 1
-        )
-        const item = { model, view }
+        ++this.items.count
+        const model = new Item(this.dataManager.defaultCount)
+        const view = new ItemView({
+            container: this.container,
+            viewState: this.itemViewState,
+            defaultCount: this.dataManager.defaultCount,
+            itemsCount: this.items.count
+        })
+        const item = { model, view, ID: this.items.count }
+        this.items.map.set(item.ID, item)
 
-        this.items.push(item)
     }
 
     delete() {
-        const item = this.items.pop()
+        const item = this.items.map.get(this.items.count)
         if (!item) return
         item.view.remove()
-        item.model = null
-        item.view = null
+        this.items.map.delete(this.items.count)
+        --this.items.count
     }
 
-    reset() {
-        while (this.items.length) this.delete()
-        this.commission = 0
-        this.add()
+    reset({ add = true } = {}) {
+        while (this.items.map.size) this.delete()
+        this.dataManager.commission = 0
+        if (add) this.add()
     }
 
-    render() {
-        let totalCostWithoutCommission = 0
+    render(commissionChanged) {
+        this.dataManager.calcAll(this.items, commissionChanged)
 
-        for (const item of this.items) {
-            totalCostWithoutCommission += item.model.calculateTotal()
+        this.viewState.DOM.totalCost.textContent = `Total Cost: ${this.dataManager.totalCost
+            > 0 ? this.dataManager.totalCost.toFixed(2)
+            : `0.00`
+            }`
+
+        this.viewState.DOM.totalCostWithCommission.textContent = `With Commission: ${this.dataManager.totalCostWithCommission
+            > 0 ? this.dataManager.totalCostWithCommission.toFixed(2)
+            : `0.00`
+            }`
+    }
+
+    handleNameInput(target) {
+        const newValue = target.value
+        target.dataset.lastValue = newValue
+        const itemElement = target.closest('[data-id]')
+        if (!itemElement) return
+        const id = Number(itemElement.dataset.id)
+        const item = this.items.map.get(id)
+        if (!item) return
+        item.model.name = newValue
+    }
+
+    handleNumberInput(target, inputClass) {
+        const newValue = target.value
+
+        if (newValue === "") {
+            target.dataset.lastValue = ""
+            return
         }
 
-        const totalCost = calculateWithCommission(totalCostWithoutCommission, this.commission)
+        if (!/^\d*\.?\d*$/.test(newValue)) {
+            target.value = target.dataset.lastValue || ""
+            return
+        }
 
-        this.viewState.DOM.totalCost.textContent = `Total Cost: ${totalCost > 0 ? totalCost.toFixed(2) : `0.00`}`
-        this.viewState.DOM.totalCostWithoutCommission.textContent = `Without Commission: ${totalCostWithoutCommission > 0 ? totalCostWithoutCommission.toFixed(2) : `0.00`}`
+        target.dataset.lastValue = newValue
+
+        const itemElement = target.closest('[data-id]')
+        if (!itemElement) return
+        const id = Number(itemElement.dataset.id)
+        const item = this.items.map.get(id)
+        if (!item) return
+
+        if (inputClass === this.viewState.classes.count) {
+            item.model.count = Number(newValue)
+        } else if (inputClass === this.viewState.classes.price) {
+            item.model.price = Number(newValue)
+        }
+
+        this.render(false)
     }
 }
+

@@ -8,17 +8,15 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./source/style/style.css">
 </head>
-
+    
 <body>
     <header>
         <div id="logo">
-            <div>
-                Total Items Cost Utility<div id="under-logo">by SPQR_rsnt</div>
-            </div>
+            Total Items Cost Utility<div id="under-logo">by SPQR_rsnt</div>
         </div>
         <div id="result-wrap">
             <div id="total-cost">Total Cost: 0.00</div>
-            <div id="total-cost-without-commission">Without Commission: 0.00</div>
+            <div id="total-cost-with-commission">With Commission: 0.00</div>
         </div>
     </header>
     <div id="commission-wrap">
@@ -26,15 +24,17 @@
     </div>
     <div id="item-wrap"></div>
     <footer>
-        <div id="button-wrap">
-            <div class="button-section">
-                <button id="add-item-button" class="button">Add New Item</button>
+        <div id="footer-wrap">
+            <div id="button-wrap">
+                <button id="add-item-button">Add New Item</button>
+                <button id="delete-item-button">Delete Last Item</button>
+                <button id="reset-button">Reset All</button>
             </div>
-            <div class="button-section">
-                <button id="delete-item-button" class="button">Delete Last Item</button>
-            </div>
-            <div class="button-section">
-                <button id="reset-button" class="button">Reset All</button>
+            <div id="data-button-wrap">
+                <button id="load-button" class="data-button">Load</button>
+                <button id="load-file-button" class="data-button">Load File</button>
+                <button id="save-button" class="data-button">Save</button>
+                <button id="download-button" class="data-button">Download</button>
             </div>
         </div>
     </footer>

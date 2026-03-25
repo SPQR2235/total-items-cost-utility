@@ -5,8 +5,12 @@ export default class ViewState {
             deleteButton: document.getElementById("delete-item-button"),
             resetButton: document.getElementById("reset-button"),
             totalCost: document.getElementById("total-cost"),
-            totalCostWithoutCommission: document.getElementById("total-cost-without-commission"),
-            commissionInput: document.getElementById("commission-input")
+            totalCostWithCommission: document.getElementById("total-cost-with-commission"),
+            commissionInput: document.getElementById("commission-input"),
+            loadButton: document.getElementById("load-button"),
+            loadFileButton: document.getElementById("load-file-button"),
+            saveButton: document.getElementById("save-button"),
+            downloadButton: document.getElementById("download-button")
         })
 
         this.tags = Object.freeze({
