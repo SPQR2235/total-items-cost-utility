@@ -140,6 +140,7 @@ button:hover {
     align-items: center;
     flex-direction: column;
     gap: 10px;
+    user-select: text;
 }
 
 #data-button-wrap {
